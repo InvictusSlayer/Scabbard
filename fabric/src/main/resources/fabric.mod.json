@@ -1,0 +1,38 @@
+{
+    "schemaVersion": 1,
+    "id": "scabbard",
+    "version": "${mod_version}",
+    "name": "${mod_name}",
+    "description": "${mod_description}",
+    "authors": [
+        "${mod_authors}"
+    ],
+    "contact": {
+        "homepage": "${homepage_url}",
+        "sources": "${source_url}",
+        "issues": "${issue_url}"
+    },
+    "license": "${mod_license}",
+    "icon": "assets/logo.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "net.invictusslayer.scabbard.ScabbardFabric"
+        ],
+        "client": [
+            "net.invictusslayer.scabbard.client.ScabbardFabricClient"
+        ]
+    },
+    "mixins": [
+        "scabbard.mixins.json",
+        "scabbard-fabric.mixins.json"
+    ],
+    "depends": {
+        "java": ">=${java_version}",
+        "minecraft": "~${mc_version}",
+        "fabric": ">=${fabric_loader}",
+        "fabric-api": "*"
+    },
+    "suggests": {
+    }
+}

@@ -1,0 +1,90 @@
+plugins {
+    id "multiloader-loader"
+    id "net.minecraftforge.gradle" version "[6.0.24,6.2)"
+    id "org.spongepowered.mixin" version "0.7.+"
+}
+
+base.archivesName = "${mod_name}-forge"
+
+mixin {
+    config("${mod_id}.mixins.json")
+    config("${mod_id}-forge.mixins.json")
+}
+
+jar {
+    manifest {
+        attributes["MixinConfigs"] = "${mod_id}.mixins.json,${mod_id}-forge.mixins.json"
+    }
+}
+
+minecraft {
+    mappings channel: "official", version: mc_version
+
+    copyIdeResources = true
+
+    reobf = false
+
+    def at = file("src/main/resources/META-INF/accesstransformer.cfg")
+    if (at.exists()) {
+        accessTransformer = at
+    }
+
+    runs {
+        client {
+            workingDirectory file("run")
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName "runClient"
+            mods {
+                modClientRun {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory file("run-server")
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName "runServer"
+            mods {
+                modServerRun {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory file("run-data")
+            ideaModule "${rootProject.name}.${project.name}.main"
+            args "--mod", mod_id, "--all", "--output", file("src/main/generated/"), "--existing", file("src/main/resources/")
+            taskName "runData"
+            mods {
+                modDataRun {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir "src/main/generated"
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+
+    implementation("net.sf.jopt-simple:jopt-simple:5.0.4") { version { strictly "5.0.4" } }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            fg.component(it)
+        }
+    }
+}
+
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
+}
