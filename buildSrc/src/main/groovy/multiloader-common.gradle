@@ -5,12 +5,15 @@ plugins {
 
 base.archivesName = "${mod_id}-${project.name}"
 version = "${mc_version}-${mod_version}"
+group = mod_group
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     withSourcesJar()
     withJavadocJar()
 }
+
+javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 
 repositories {
     mavenCentral()
@@ -44,11 +47,10 @@ repositories {
 
 ["apiElements", "runtimeElements", "sourcesElements", "javadocElements"].each { variant ->
     configurations."$variant".outgoing {
-        capability("$mod_group:${project.name}:$version")
-        capability("$mod_group:${base.archivesName.get()}:$version")
-        capability("$mod_group:$mod_id-${project.name}-$mc_version:$version")
-        capability("$mod_group:$mod_id:$version")
-        capability("$mod_name:$mod_id:$version")
+        capability("$group:${project.name}:$version")
+        capability("$group:${base.archivesName.get()}:$version")
+        capability("$group:$mod_id-${project.name}-$mc_version:$version")
+        capability("$group:$mod_id:$version")
     }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
@@ -109,8 +111,6 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url System.getenv("local_maven_url")
-        }
+        maven { url = System.getenv("local_maven_url") }
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     id "multiloader-loader"
     id "net.neoforged.moddev"
+    id "com.hypherionmc.modutils.modpublisher" version "2.+"
 }
 
 neoForge {
@@ -10,7 +11,7 @@ neoForge {
         accessTransformers.from(at.absolutePath)
     }
     parchment {
-        minecraftVersion = mc_version
+        minecraftVersion = parch_mc_version
         mappingsVersion = parch_version
     }
     runs {
@@ -36,3 +37,26 @@ neoForge {
 }
 
 sourceSets.main.resources.srcDir "src/main/generated"
+
+publisher {
+    apiKeys {
+        modrinth System.getenv("MODRINTH_TOKEN")
+        curseforge System.getenv("CURSEFORGE_TOKEN")
+    }
+    setCurseID("$curseforge_id")
+    setModrinthID("$modrinth_id")
+    setVersionType("$release_type")
+    setChangelog("$changelog")
+
+    setDisplayName("$mod_name ${project.version} [NeoForge]")
+    setVersion("${mod_version}+neoforge")
+    setGameVersions("$mc_version")
+    setLoaders("neoforge")
+
+    setArtifact(jar)
+    addAdditionalFile(sourcesJar)
+    setCurseEnvironment("both")
+
+    curseDepends {}
+    modrinthDepends {}
+}

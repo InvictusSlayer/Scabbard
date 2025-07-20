@@ -1,5 +1,6 @@
 package net.invictusslayer.scabbard;
 
+import net.invictusslayer.scabbard.platform.NeoForgePlatformHandler;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
@@ -7,5 +8,6 @@ import net.neoforged.fml.common.Mod;
 public class ScabbardNeoForge {
 	public ScabbardNeoForge(final IEventBus bus) {
 		Scabbard.init();
+		NeoForgePlatformHandler.register(bus);
 	}
 }

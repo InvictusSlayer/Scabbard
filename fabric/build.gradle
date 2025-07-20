@@ -1,13 +1,14 @@
 plugins {
     id "multiloader-loader"
     id "fabric-loom"
+    id "com.hypherionmc.modutils.modpublisher" version "2.+"
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${mc_version}"
     mappings loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${mc_version}:${parch_version}@zip")
+        parchment("org.parchmentmc.data:parchment-${parch_mc_version}:${parch_version}@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
@@ -35,4 +36,27 @@ loom {
             runDir("run-server")
         }
     }
+}
+
+publisher {
+    apiKeys {
+        modrinth System.getenv("MODRINTH_TOKEN")
+        curseforge System.getenv("CURSEFORGE_TOKEN")
+    }
+    setCurseID("$curseforge_id")
+    setModrinthID("$modrinth_id")
+    setVersionType("$release_type")
+    setChangelog("$changelog")
+
+    setDisplayName("$mod_name ${project.version} [Fabric]")
+    setVersion("${mod_version}+fabric")
+    setGameVersions("$mc_version")
+    setLoaders("fabric")
+
+    setArtifact(jar)
+    addAdditionalFile(sourcesJar)
+    setCurseEnvironment("both")
+
+    curseDepends {}
+    modrinthDepends {}
 }

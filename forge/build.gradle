@@ -2,9 +2,8 @@ plugins {
     id "multiloader-loader"
     id "net.minecraftforge.gradle" version "[6.0.24,6.2)"
     id "org.spongepowered.mixin" version "0.7.+"
+    id "com.hypherionmc.modutils.modpublisher" version "2.+"
 }
-
-base.archivesName = "${mod_name}-forge"
 
 mixin {
     config("${mod_id}.mixins.json")
@@ -87,4 +86,27 @@ sourceSets.each {
     def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
     it.output.resourcesDir = dir
     it.java.destinationDirectory = dir
+}
+
+publisher {
+    apiKeys {
+        modrinth System.getenv("MODRINTH_TOKEN")
+        curseforge System.getenv("CURSEFORGE_TOKEN")
+    }
+    setCurseID("$curseforge_id")
+    setModrinthID("$modrinth_id")
+    setVersionType("$release_type")
+    setChangelog("$changelog")
+
+    setDisplayName("$mod_name ${project.version} [Forge]")
+    setVersion("${mod_version}+forge")
+    setGameVersions("$mc_version")
+    setLoaders("forge")
+
+    setArtifact(jar)
+    addAdditionalFile(sourcesJar)
+    setCurseEnvironment("both")
+
+    curseDepends {}
+    modrinthDepends {}
 }

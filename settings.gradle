@@ -32,6 +32,7 @@ pluginManagement {
             }
             filter { includeGroupAndSubgroups("net.minecraftforge") }
         }
+        maven { url = "https://maven.firstdark.dev/releases" }
     }
 }
 

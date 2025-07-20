@@ -3,12 +3,8 @@ plugins {
 }
 
 configurations {
-    commonJava{
-        canBeResolved = true
-    }
-    commonResources{
-        canBeResolved = true
-    }
+    commonJava { canBeResolved = true }
+    commonResources { canBeResolved = true }
 }
 
 dependencies {
@@ -27,6 +23,7 @@ tasks.named("compileJava", JavaCompile) {
 }
 
 processResources {
+    exclude("META-INF/accesstransformer.cfg")
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
 }
