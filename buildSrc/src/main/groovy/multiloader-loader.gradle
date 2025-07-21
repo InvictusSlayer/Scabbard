@@ -24,6 +24,7 @@ tasks.named("compileJava", JavaCompile) {
 
 processResources {
     exclude("META-INF/accesstransformer.cfg")
+
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
 }
@@ -34,6 +35,8 @@ tasks.named("javadoc", Javadoc).configure {
 }
 
 tasks.named("sourcesJar", Jar) {
+    exclude("META-INF/accesstransformer.cfg")
+
     dependsOn(configurations.commonJava)
     from(configurations.commonJava)
     dependsOn(configurations.commonResources)

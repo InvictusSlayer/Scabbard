@@ -96,7 +96,7 @@ publisher {
     setCurseID("$curseforge_id")
     setModrinthID("$modrinth_id")
     setVersionType("$release_type")
-    setChangelog("$changelog")
+    setChangelog(projectDir.toPath().parent.resolve("CHANGELOG.md").toFile().readLines().join("\n"))
 
     setDisplayName("$mod_name ${project.version} [Forge]")
     setVersion("${mod_version}+forge")
