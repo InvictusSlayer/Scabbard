@@ -9,8 +9,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public abstract class FlammableBlocks {
-	public abstract void register();
-
 	protected static void registerWoodFamilies(Stream<WoodFamily> families) {
 		families.filter(WoodFamily::isFlammable).forEach(family -> family.getVariants().forEach((variant, supplier) -> {
 			switch (variant) {

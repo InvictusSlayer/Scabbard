@@ -6,12 +6,11 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public abstract class StrippableBlocks {
-	public abstract void register();
-
-	protected static void registerWoodFamilies() {
-		WoodFamily.getAllFamilies().forEach(family -> {
+	protected static void registerWoodFamilies(Stream<WoodFamily> families) {
+		families.forEach(family -> {
 			register(family.get(WoodFamily.Variant.LOG), family.get(WoodFamily.Variant.STRIPPED_LOG));
 			register(family.get(WoodFamily.Variant.WOOD), family.get(WoodFamily.Variant.STRIPPED_WOOD));
 		});

@@ -11,8 +11,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import java.util.stream.Stream;
 
 public abstract class DispensableItems {
-	public abstract void register();
-
 	protected static void registerWoodFamilies(Stream<WoodFamily> families) {
 		families.forEach(family -> {
 			if (family.getBoatLayer(false) != null) DispenserBlock.registerBehavior((ItemLike) family.get(WoodFamily.Variant.BOAT_ITEM).get(), new BoatDispenseItemBehavior((EntityType<Boat>) family.get(WoodFamily.Variant.BOAT).get()));

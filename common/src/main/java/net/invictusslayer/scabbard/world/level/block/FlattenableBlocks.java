@@ -10,8 +10,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Supplier;
 
 public abstract class FlattenableBlocks {
-	public abstract void register();
-
 	protected static void register(Supplier<?> block, BlockState result) {
 		ShovelItem.FLATTENABLES = Maps.newHashMap(ShovelItem.FLATTENABLES);
 		ShovelItem.FLATTENABLES.put((Block) block.get(), result);
