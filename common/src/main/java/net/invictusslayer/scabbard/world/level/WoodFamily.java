@@ -1,10 +1,7 @@
 package net.invictusslayer.scabbard.world.level;
 
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.entity.vehicle.ChestBoat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
@@ -19,8 +16,7 @@ public class WoodFamily {
 	private static final List<WoodFamily> FAMILIES = new ArrayList<>();
 	private TagKey<Block> logBlocks = null;
 	private TagKey<Item> logItems = null;
-	private ModelLayerLocation boatLayer = null;
-	private ModelLayerLocation chestBoatLayer = null;
+	private Boat.Type boatType = null;
 	private final Map<Variant, Supplier<?>> variants = new HashMap<>();
 	private boolean isFlammable = true;
 
@@ -34,8 +30,8 @@ public class WoodFamily {
 		return logItems;
 	}
 
-	public ModelLayerLocation getBoatLayer(boolean chestBoat) {
-		return chestBoat ? chestBoatLayer : boatLayer;
+	public Boat.Type getBoatType() {
+		return boatType;
 	}
 
 	public Map<Variant, Supplier<?>> getVariants() {
@@ -76,17 +72,14 @@ public class WoodFamily {
 			return this;
 		}
 
-		public Builder boat(Supplier<EntityType<Boat>> boat, Supplier<Item> boatItem, ModelLayerLocation layer) {
+		public Builder boat(Supplier<Item> boat, Boat.Type type) {
 			family.variants.put(Variant.BOAT, boat);
-			family.variants.put(Variant.BOAT_ITEM, boatItem);
-			family.boatLayer = layer;
+			family.boatType = type;
 			return this;
 		}
 
-		public Builder chestBoat(Supplier<EntityType<ChestBoat>> boat, Supplier<Item> boatItem, ModelLayerLocation layer) {
+		public Builder chestBoat(Supplier<Item> boat) {
 			family.variants.put(Variant.CHEST_BOAT, boat);
-			family.variants.put(Variant.CHEST_BOAT_ITEM, boatItem);
-			family.chestBoatLayer = layer;
 			return this;
 		}
 
@@ -185,10 +178,8 @@ public class WoodFamily {
 
 	public enum Variant {
 		BUTTON("Button"),
-		BOAT(null),
-		BOAT_ITEM("Boat"),
-		CHEST_BOAT(null),
-		CHEST_BOAT_ITEM("Boat with Chest"),
+		BOAT("Boat"),
+		CHEST_BOAT("Boat with Chest"),
 		DOOR("Door", true),
 		FENCE("Fence"),
 		FENCE_GATE("Fence Gate"),

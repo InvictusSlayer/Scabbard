@@ -105,7 +105,7 @@ public abstract class LangProvider implements DataProvider {
 	}
 
 	protected void addSound(Supplier<? extends SoundEvent> key, String name) {
-		add(key.get().location().toLanguageKey("subtitles"), name);
+		add(key.get().getLocation().toLanguageKey("subtitles"), name);
 	}
 
 	protected void addItemDesc(Supplier<? extends Item> key, String name) {
