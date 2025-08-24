@@ -1,13 +1,12 @@
 plugins {
     id "multiloader-common"
-    id "net.neoforged.moddev"
+    id "net.neoforged.moddev.legacyforge"
 }
 
-neoForge {
-    neoFormVersion = neo_form
-    def at = file("src/main/resources/META-INF/accesstransformer.cfg")
-    if (at.exists()) {
-        accessTransformers.from(at.absolutePath)
+legacyForge {
+    mcpVersion = mc_version
+    if (file("src/main/resources/META-INF/accesstransformer.cfg").exists()) {
+        accessTransformers = ["src/main/resources/META-INF/accesstransformer.cfg"]
     }
     parchment {
         minecraftVersion = parch_mc_version

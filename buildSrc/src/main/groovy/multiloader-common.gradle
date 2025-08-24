@@ -89,8 +89,7 @@ processResources {
             "homepage_url"   : homepage_url,   "source_url"      : source_url,   "issue_url"    : issue_url,
             "mc_version"     : mc_version,     "mc_range"        : mc_range,     "java_version" : java_version,
             "fabric_version" : fabric_version, "fabric_loader"   : fabric_loader,
-            "forge_version"  : forge_version,  "forge_range"     : forge_range,
-            "neo_version"    : neo_version,    "neo_range"       : neo_range
+            "forge_version"  : forge_version,  "forge_range"     : forge_range
     ]
 
     var jsonExpandProps = expandProps.collectEntries {
