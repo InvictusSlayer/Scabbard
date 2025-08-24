@@ -81,7 +81,7 @@ public abstract class LangProvider implements DataProvider {
 	}
 
 	protected void add(Enchantment key, String name) {
-		add(key.description().getString(), name);
+		add(key.getDescriptionId(), name);
 	}
 
 	protected void addEffect(Supplier<Holder.Reference<MobEffect>> key, String name) {

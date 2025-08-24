@@ -4,7 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ForgeBiomeModifications {
-	public static void bootstrap(BootstrapContext<BiomeModifier> context, BiomeModifierHandler handler) {
+	public static void bootstrap(BootstapContext<BiomeModifier> context, BiomeModifierHandler handler) {
 		HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
 		HolderGetter<PlacedFeature> placed = context.lookup(Registries.PLACED_FEATURE);
 
