@@ -8,9 +8,14 @@ import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -41,6 +46,11 @@ public class FabricPlatformHandler implements IPlatformHandler {
 	public void addFeatureBiomeModifier(BiomeModifierHandler handler, String name, TagKey<Biome> biomes, GenerationStep.Decoration step, List<ResourceKey<PlacedFeature>> features) {
 		BiomeModification modification = BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(Scabbard.MOD_ID, name));
 		features.forEach(feature -> modification.add(ModificationPhase.ADDITIONS, context -> context.hasTag(biomes), context -> context.getGenerationSettings().addFeature(step, feature)));
+	}
+
+	@Override
+	public Supplier<SpawnEggItem> registerSpawnEgg(String modId, String name, Supplier<EntityType<? extends Mob>> entity, int bgColor, int fgColor, Item.Properties props) {
+		return register(BuiltInRegistries.ITEM, modId, name, () -> new SpawnEggItem(entity.get(), bgColor, fgColor, props));
 	}
 
 	@Override

@@ -4,14 +4,20 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -42,6 +48,11 @@ public class NeoForgePlatformHandler implements IPlatformHandler {
 	}
 
 	private static final Map<ResourceKey<?>, DeferredRegister> REGISTERS = new Reference2ObjectOpenHashMap<>();
+
+	@Override
+	public Supplier<SpawnEggItem> registerSpawnEgg(String modId, String name, Supplier<EntityType<? extends Mob>> entity, int bgColor, int fgColor, Item.Properties props) {
+		return register(BuiltInRegistries.ITEM, modId, name, () -> new DeferredSpawnEggItem(entity, bgColor, fgColor, props));
+	}
 
 	@Override
 	public <T> Supplier<T> register(Registry<? super T> registry, String modId, String name, Supplier<T> value) {
