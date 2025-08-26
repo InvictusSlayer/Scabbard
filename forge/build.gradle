@@ -11,15 +11,20 @@ mixin {
     config("${mod_id}-forge.mixins.json")
 }
 
+jar {
+    finalizedBy("reobfJar")
+    manifest {
+        attributes["MixinConfigs"] = "${mod_id}.mixins.json,${mod_id}-forge.mixins.json"
+    }
+}
+
 legacyForge {
     version = "${mc_version}-${forge_version}"
 
     validateAccessTransformers = true
 
     def at = project(":common").file("src/main/resources/META-INF/accesstransformer.cfg")
-    if (at.exists()) {
-        accessTransformers = [at.absolutePath]
-    }
+    if (at.exists()) accessTransformers = [at.absolutePath]
     parchment {
         minecraftVersion = parch_mc_version
         mappingsVersion = parch_version
@@ -49,13 +54,6 @@ sourceSets.main.resources.srcDir "src/main/generated"
 dependencies {
     compileOnly project(":common")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
-}
-
-jar {
-    finalizedBy("reobfJar")
-    manifest.attributes([
-            "MixinConfigs": "${mod_id}.mixins.json,${mod_id}-forge.mixins.json"
-    ])
 }
 
 publisher {
