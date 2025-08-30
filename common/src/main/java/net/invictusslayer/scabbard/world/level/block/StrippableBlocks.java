@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public abstract class StrippableBlocks {
 	protected static void registerWoodFamilies(Stream<WoodFamily> families) {
-		families.forEach(family -> {
+		families.filter(WoodFamily::isStrippable).forEach(family -> {
 			register(family.get(WoodFamily.Variant.LOG), family.get(WoodFamily.Variant.STRIPPED_LOG));
 			register(family.get(WoodFamily.Variant.WOOD), family.get(WoodFamily.Variant.STRIPPED_WOOD));
 		});

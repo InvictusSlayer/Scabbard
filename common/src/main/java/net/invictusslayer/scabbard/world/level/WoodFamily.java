@@ -19,6 +19,7 @@ public class WoodFamily {
 	private Boat.Type boatType = null;
 	private final Map<Variant, Supplier<?>> variants = new HashMap<>();
 	private boolean isFlammable = true;
+	private boolean isStrippable = true;
 
 	WoodFamily() {}
 
@@ -44,6 +45,10 @@ public class WoodFamily {
 
 	public boolean isFlammable() {
 		return isFlammable;
+	}
+
+	public boolean isStrippable() {
+		return isStrippable;
 	}
 
 	protected static Builder builder() {
@@ -174,48 +179,47 @@ public class WoodFamily {
 			family.isFlammable = false;
 			return this;
 		}
+
+		public Builder notStrippable() {
+			family.isStrippable = false;
+			return this;
+		}
 	}
 
 	public enum Variant {
-		BUTTON("Button"),
-		BOAT("Boat"),
-		CHEST_BOAT("Boat with Chest"),
-		DOOR("Door", true),
-		FENCE("Fence"),
-		FENCE_GATE("Fence Gate"),
-		HANGING_SIGN("Hanging Sign"),
-		HANGING_SIGN_ITEM(null),
-		LEAVES("Leaves"),
-		LOG("Log"),
-		SAPLING("Sapling", true),
-		SIGN("Sign"),
-		SIGN_ITEM(null),
-		SLAB("Slab"),
-		STAIRS("Stairs"),
-		STRIPPED_LOG(null),
-		STRIPPED_WOOD(null),
-		PLANKS("Planks"),
-		POTTED_SAPLING(null, true),
-		PRESSURE_PLATE("Pressure Plate"),
-		TRAPDOOR("Trapdoor", true),
-		WALL_HANGING_SIGN(null),
-		WALL_SIGN(null),
-		WOOD("Wood");
+		BUTTON,
+		BOAT,
+		CHEST_BOAT,
+		DOOR(true),
+		FENCE,
+		FENCE_GATE,
+		HANGING_SIGN,
+		HANGING_SIGN_ITEM,
+		LEAVES,
+		LOG,
+		SAPLING(true),
+		SIGN,
+		SIGN_ITEM,
+		SLAB,
+		STAIRS,
+		STRIPPED_LOG,
+		STRIPPED_WOOD,
+		PLANKS,
+		POTTED_SAPLING(true),
+		PRESSURE_PLATE,
+		TRAPDOOR(true),
+		WALL_HANGING_SIGN,
+		WALL_SIGN,
+		WOOD;
 
-		private final String name;
 		private final boolean isCutout;
 
-		Variant(String name) {
-			this(name, false);
+		Variant() {
+			this(false);
 		}
 
-		Variant(String name, boolean isCutout) {
-			this.name = name;
+		Variant(boolean isCutout) {
 			this.isCutout = isCutout;
-		}
-
-		public String getName() {
-			return name;
 		}
 
 		public boolean isCutout() {
