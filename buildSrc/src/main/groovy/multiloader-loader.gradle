@@ -18,6 +18,7 @@ dependencies {
 }
 
 tasks.named("compileJava", JavaCompile) {
+    options.encoding = "utf-8"
     dependsOn(configurations.commonJava)
     source(configurations.commonJava)
 }

@@ -1,1 +1,1 @@
-- 1.20.1 release
+- added spawn egg registration to platform handler
