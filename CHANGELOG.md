@@ -1,1 +1,2 @@
-- 1.21.4 release
+- removed WoodFamily Variant names
+- added WoodFamily condition isStrippable
