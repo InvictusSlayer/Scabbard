@@ -1,1 +1,2 @@
-- added spawn egg registration to platform handler
+- removed WoodFamily Variant names
+- added WoodFamily condition isStrippable
