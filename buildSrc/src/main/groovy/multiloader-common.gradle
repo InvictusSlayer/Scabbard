@@ -13,7 +13,7 @@ java {
     withJavadocJar()
 }
 
-javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+javadoc.options.addStringOption("Xdoclint:none", "-quiet")
 
 repositories {
     mavenCentral()
