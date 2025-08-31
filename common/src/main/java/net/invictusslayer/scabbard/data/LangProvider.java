@@ -57,7 +57,7 @@ public abstract class LangProvider implements DataProvider {
 	}
 
 	protected void add(Block key, String name) {
-		add(key.asItem().getDescriptionId(), name);
+		add(key.getDescriptionId(), name);
 	}
 
 	protected void addItem(Supplier<? extends Item> key, String name) {
