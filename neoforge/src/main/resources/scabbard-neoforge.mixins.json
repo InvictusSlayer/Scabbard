@@ -4,6 +4,7 @@
   "package": "net.invictusslayer.scabbard.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ModelBuilderMixin"
   ],
   "client": [
   ],
