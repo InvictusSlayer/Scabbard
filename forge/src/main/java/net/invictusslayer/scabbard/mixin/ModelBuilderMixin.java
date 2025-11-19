@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @SuppressWarnings("AddedMixinMembersNamePattern")
-@Mixin(ModelBuilder.class)
+@Mixin(value = ModelBuilder.class, remap = false)
 public class ModelBuilderMixin<T extends ModelBuilder<T>> implements IExtendedModelBuilder<T> {
 	@Unique
 	private Pair<Integer, Integer> textureSize = null;
 
 	@Inject(method = "toJson", at = @At("TAIL"))
 	private void onToJson(CallbackInfoReturnable<JsonObject> cir, @Local(name = "root") JsonObject root) {
-		if (textureSize != null) root.addProperty("texture_size", String.format("[%s,%s]", textureSize.getFirst(), textureSize.getSecond()));
+		if (textureSize != null) root.addProperty("texture_size", String.format("[%s, %s]", textureSize.getFirst(), textureSize.getSecond()));
 	}
 
 	@Override

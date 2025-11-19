@@ -1,1 +1,1 @@
-- small LangProvider fix
+- added textureSize option to Forge ModelBuilder
