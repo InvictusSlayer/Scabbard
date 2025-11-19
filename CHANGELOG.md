@@ -1,1 +1,1 @@
-- added textureSize option to Forge ModelBuilder
+- small texture_size formatting fix
