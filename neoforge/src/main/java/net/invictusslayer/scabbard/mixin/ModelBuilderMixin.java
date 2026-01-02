@@ -1,5 +1,6 @@
 package net.invictusslayer.scabbard.mixin;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Pair;
@@ -12,14 +13,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @SuppressWarnings("AddedMixinMembersNamePattern")
-@Mixin(ModelBuilder.class)
+@Mixin(value = ModelBuilder.class, remap = false)
 public class ModelBuilderMixin<T extends ModelBuilder<T>> implements IExtendedModelBuilder<T> {
 	@Unique
 	private Pair<Integer, Integer> textureSize = null;
 
 	@Inject(method = "toJson", at = @At("TAIL"))
 	private void onToJson(CallbackInfoReturnable<JsonObject> cir, @Local(name = "root") JsonObject root) {
-		if (textureSize != null) root.addProperty("texture_size", String.format("[%s,%s]", textureSize.getFirst(), textureSize.getSecond()));
+		if (textureSize != null) {
+			JsonArray size = new JsonArray();
+			size.add(textureSize.getFirst());
+			size.add(textureSize.getSecond());
+			root.add("texture_size", size);
+		}
 	}
 
 	@Override
