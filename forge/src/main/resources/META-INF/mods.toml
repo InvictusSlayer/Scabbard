@@ -20,12 +20,12 @@ displayURL="${homepage_url}"
 modId="minecraft"
 mandatory=true
 versionRange="${mc_range}"
-ordering="NONE"
+ordering="BEFORE"
 side="BOTH"
 
 [[dependencies.scabbard]]
 modId="forge"
 mandatory=true
 versionRange="${forge_range}"
-ordering="NONE"
+ordering="BEFORE"
 side="BOTH"
