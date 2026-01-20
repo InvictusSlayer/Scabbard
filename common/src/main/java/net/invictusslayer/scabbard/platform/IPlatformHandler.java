@@ -12,6 +12,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -30,6 +32,12 @@ public interface IPlatformHandler {
 	Platform getPlatform();
 
 	Path configPath(String modId);
+
+	void addFlammableBlock(Block block, int flammability, int encouragement);
+
+	void addStrippableBlock(Block block, Block stripped);
+
+	void addFlattenableBlock(Block block, BlockState flattened);
 
 	void addSpawnBiomeModifier(BiomeModifierHandler handler, String name, TagKey<Biome> biomes, List<MobSpawnSettings.SpawnerData> spawners);
 
