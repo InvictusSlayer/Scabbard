@@ -1,10 +1,7 @@
 package net.invictusslayer.scabbard.platform;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeModification;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.fabricmc.loader.api.FabricLoader;
-import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -38,14 +35,12 @@ public class FabricPlatformHandler implements IPlatformHandler {
 
 	@Override
 	public void addSpawnBiomeModifier(BiomeModifierHandler handler, String name, TagKey<Biome> biomes, List<MobSpawnSettings.SpawnerData> spawners) {
-		BiomeModification modification = BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(Scabbard.MOD_ID, name));
-		spawners.forEach(spawner -> modification.add(ModificationPhase.ADDITIONS, context -> context.hasTag(biomes), context -> context.getSpawnSettings().addSpawn(spawner.type.getCategory(), spawner)));
+		spawners.forEach(spawner -> BiomeModifications.addSpawn(context -> context.hasTag(biomes), spawner.type.getCategory(), spawner.type, spawner.getWeight().asInt(), spawner.minCount, spawner.maxCount));
 	}
 
 	@Override
 	public void addFeatureBiomeModifier(BiomeModifierHandler handler, String name, TagKey<Biome> biomes, GenerationStep.Decoration step, List<ResourceKey<PlacedFeature>> features) {
-		BiomeModification modification = BiomeModifications.create(ResourceLocation.fromNamespaceAndPath(Scabbard.MOD_ID, name));
-		features.forEach(feature -> modification.add(ModificationPhase.ADDITIONS, context -> context.hasTag(biomes), context -> context.getGenerationSettings().addFeature(step, feature)));
+		features.forEach(feature -> BiomeModifications.addFeature(context -> context.hasTag(biomes), step, BiomeModifierHandler.modifierKey(feature)));
 	}
 
 	@Override
