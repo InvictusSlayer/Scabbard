@@ -1,2 +1,1 @@
-- fixed load order issues for forge
-- added fabric entry point
+- also fixed it for forge...

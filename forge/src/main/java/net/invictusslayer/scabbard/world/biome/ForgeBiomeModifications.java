@@ -27,7 +27,7 @@ public class ForgeBiomeModifications {
 
 		handler.featureModifiers.forEach(modifier -> {
 			List<Holder<PlacedFeature>> features = new ArrayList<>();
-			modifier.features().forEach(feature -> features.add(placed.getOrThrow(feature)));
+			modifier.features().forEach(feature -> features.add(placed.getOrThrow(BiomeModifierHandler.modifierKey(feature))));
 			context.register(ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(handler.modId, modifier.name())),
 					new ForgeBiomeModifiers.AddFeaturesBiomeModifier(biomes.getOrThrow(modifier.biomes()), HolderSet.direct(features), modifier.step()));
 		});
