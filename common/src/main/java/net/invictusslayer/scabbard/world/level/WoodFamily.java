@@ -1,5 +1,6 @@
 package net.invictusslayer.scabbard.world.level;
 
+import net.invictusslayer.scabbard.platform.IPlatformHandler;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
@@ -49,6 +50,23 @@ public class WoodFamily {
 
 	public boolean isStrippable() {
 		return isStrippable;
+	}
+
+	public void registerFlammability(IPlatformHandler platform) {
+		if (!isFlammable) return;
+		getVariants().forEach((variant, supplier) -> {
+			switch (variant) {
+				case LOG, WOOD, STRIPPED_LOG, STRIPPED_WOOD -> platform.addFlammableBlock((Block) supplier.get(), 5, 5);
+				case LEAVES -> platform.addFlammableBlock((Block) supplier.get(), 60, 30);
+				case PLANKS, STAIRS, SLAB, FENCE, FENCE_GATE -> platform.addFlammableBlock((Block) supplier.get(), 20, 5);
+			}
+		});
+	}
+
+	public void registerStrippability(IPlatformHandler platform) {
+		if (!isStrippable) return;
+		platform.addStrippableBlock((Block) get(Variant.LOG).get(), (Block) get(Variant.STRIPPED_LOG).get());
+		platform.addStrippableBlock((Block) get(Variant.WOOD).get(), (Block) get(Variant.STRIPPED_WOOD).get());
 	}
 
 	protected static Builder builder() {

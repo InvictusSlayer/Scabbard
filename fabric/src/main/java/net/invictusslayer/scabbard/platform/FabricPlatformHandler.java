@@ -1,6 +1,9 @@
 package net.invictusslayer.scabbard.platform;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
@@ -15,6 +18,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -31,6 +36,21 @@ public class FabricPlatformHandler implements IPlatformHandler {
 	@Override
 	public Path configPath(String modId) {
 		return FabricLoader.getInstance().getConfigDir().resolve(modId);
+	}
+
+	@Override
+	public void addFlammableBlock(Block block, int flammability, int encouragement) {
+		FlammableBlockRegistry.getDefaultInstance().add(block, flammability, encouragement);
+	}
+
+	@Override
+	public void addStrippableBlock(Block block, Block stripped) {
+		StrippableBlockRegistry.register(block, stripped);
+	}
+
+	@Override
+	public void addFlattenableBlock(Block block, BlockState flattened) {
+		FlattenableBlockRegistry.register(block, flattened);
 	}
 
 	@Override
