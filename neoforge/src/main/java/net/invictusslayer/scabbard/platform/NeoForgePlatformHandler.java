@@ -1,5 +1,6 @@
 package net.invictusslayer.scabbard.platform;
 
+import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
@@ -9,10 +10,16 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.bus.api.IEventBus;
@@ -35,6 +42,23 @@ public class NeoForgePlatformHandler implements IPlatformHandler {
 	@Override
 	public Path configPath(String modId) {
 		return FMLPaths.CONFIGDIR.get().resolve(modId);
+	}
+
+	@Override
+	public void addFlammableBlock(Block block, int flammability, int encouragement) {
+		((FireBlock) Blocks.FIRE).setFlammable(block, encouragement, flammability);
+	}
+
+	@Override
+	public void addStrippableBlock(Block block, Block stripped) {
+		AxeItem.STRIPPABLES = Maps.newHashMap(AxeItem.STRIPPABLES);
+		AxeItem.STRIPPABLES.put(block, stripped);
+	}
+
+	@Override
+	public void addFlattenableBlock(Block block, BlockState flattened) {
+		ShovelItem.FLATTENABLES = Maps.newHashMap(ShovelItem.FLATTENABLES);
+		ShovelItem.FLATTENABLES.put(block, flattened);
 	}
 
 	@Override
