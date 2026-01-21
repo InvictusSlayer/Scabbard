@@ -27,7 +27,7 @@ public class NeoForgeBiomeModifications {
 
 		handler.featureModifiers.forEach(modifier -> {
 			List<Holder<PlacedFeature>> features = new ArrayList<>();
-			modifier.features().forEach(feature -> features.add(placed.getOrThrow(feature)));
+			modifier.features().forEach(feature -> features.add(placed.getOrThrow(BiomeModifierHandler.modifierKey(feature))));
 			context.register(ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(handler.modId, modifier.name())),
 					new BiomeModifiers.AddFeaturesBiomeModifier(biomes.getOrThrow(modifier.biomes()), HolderSet.direct(features), modifier.step()));
 		});
