@@ -26,6 +26,6 @@ public class BiomeModifierHandler {
 	public record FeatureModifier(String name, TagKey<Biome> biomes, GenerationStep.Decoration step, List<ResourceKey<PlacedFeature>> features) {}
 
 	public static ResourceKey<PlacedFeature> modifierKey(ResourceKey<PlacedFeature> key) {
-		return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(key.location().getNamespace(), key.location().getPath() + "_modifier"));
+		return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(key.location().getNamespace(), key.location().getPath() + "_modifier"));
 	}
 }
