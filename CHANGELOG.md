@@ -1,1 +1,1 @@
-- moved flammable, strippable and flattenable block handling to platform
+- added armor trim handler to fix mod compatibility
