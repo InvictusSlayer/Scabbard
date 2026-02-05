@@ -13,6 +13,7 @@ import java.util.Map;
 public class ArmorTrimHandler {
 	private static final Map<String, ResourceLocation> TRIM_MATERIALS = new HashMap<>();
 	private static final List<ResourceLocation> TRIM_PATTERNS = new ArrayList<>();
+	private static final List<ResourceLocation> ITEM_OVERLAYS = new ArrayList<>();
 
 	public static Map<String, ResourceLocation> getTrimMaterials() {
 		return TRIM_MATERIALS;
@@ -22,16 +23,12 @@ public class ArmorTrimHandler {
 		TRIM_MATERIALS.put(name, loc);
 	}
 
-	public static void addMaterial(String modId, String name) {
-		addMaterial(new ResourceLocation(modId, "trims/color_palettes/" + name), name);
-	}
-
 	public static void addMaterial(ResourceKey<TrimMaterial> key) {
-		addMaterial(key.location().getNamespace(), key.location().getPath());
+		addMaterial(key.location().withPrefix("trims/color_palettes/"), key.location().getPath());
 	}
 
 	public static void addMaterial(ResourceKey<TrimMaterial> key, String suffix) {
-		addMaterial(key.location().getNamespace(), key.location().getPath() + suffix);
+		addMaterial(key.location().withPrefix("trims/color_palettes/"), key.location().withSuffix(suffix).getPath());
 	}
 
 	public static List<ResourceLocation> getTrimPatterns() {
@@ -42,12 +39,20 @@ public class ArmorTrimHandler {
 		TRIM_PATTERNS.add(loc);
 	}
 
-	public static void addPattern(String modId, String name) {
-		addPattern(new ResourceLocation(modId, "trims/models/armor/" + name));
-		addPattern(new ResourceLocation(modId, "trims/models/armor/" + name + "_leggings"));
+	public static void addPattern(ResourceKey<TrimPattern> key) {
+		addPattern(key.location().withPrefix("trims/models/armor/"));
+		addPattern(key.location().withPrefix("trims/models/armor/").withSuffix("_leggings"));
 	}
 
-	public static void addPattern(ResourceKey<TrimPattern> key) {
-		addPattern(key.location().getNamespace(), key.location().getPath());
+	public static List<ResourceLocation> getItemOverlays() {
+		return ITEM_OVERLAYS;
+	}
+
+	public static void addOverlay(ResourceLocation loc) {
+		ITEM_OVERLAYS.add(loc);
+	}
+
+	public static void addOverlay(String modId, String name) {
+		addOverlay(new ResourceLocation(modId, "trims/items/" + name));
 	}
 }

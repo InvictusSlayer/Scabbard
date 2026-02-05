@@ -1,1 +1,1 @@
-- added armor trim handler to fix mod compatibility
+- last fix definitely
