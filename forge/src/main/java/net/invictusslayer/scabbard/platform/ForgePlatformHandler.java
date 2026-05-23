@@ -2,6 +2,7 @@ package net.invictusslayer.scabbard.platform;
 
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.invictusslayer.scabbard.resource.BuiltInPackHandler;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -80,6 +81,11 @@ public class ForgePlatformHandler implements IPlatformHandler {
 	public <T> Supplier<Holder.Reference<T>> registerHolder(Registry<T> registry, String modId, String name, Supplier<T> value) {
 		RegistryObject<?> registryObject = REGISTERS.computeIfAbsent(registry.key(), key -> DeferredRegister.create(registry.key().location(), modId)).register(name, value);
 		return () -> (Holder.Reference<T>) registryObject.getHolder().get();
+	}
+
+	@Override
+	public void registerBuiltinPack(String modId, String packId, String name, boolean enabled) {
+		BuiltInPackHandler.PACKS.add(new BuiltInPackHandler.PackData(modId, packId, name, enabled));
 	}
 
 	public static void register(final IEventBus bus) {

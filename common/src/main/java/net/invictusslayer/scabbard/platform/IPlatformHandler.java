@@ -43,6 +43,8 @@ public interface IPlatformHandler {
 
 	<T> Supplier<Holder.Reference<T>> registerHolder(Registry<T> registry, String modId, String name, Supplier<T> value);
 
+	void registerBuiltinPack(String modId, String packId, String name, boolean enabled);
+
 	private static <T> T load(Class<T> clazz) {
 		final T loadedService = ServiceLoader.load(clazz).findFirst().orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
 		Scabbard.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);

@@ -4,10 +4,15 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -68,5 +73,13 @@ public class FabricPlatformHandler implements IPlatformHandler {
 	public <T> Supplier<Holder.Reference<T>> registerHolder(Registry<T> registry, String modId, String name, Supplier<T> value) {
 		Holder.Reference<T> registered = Registry.registerForHolder(registry, ResourceLocation.fromNamespaceAndPath(modId, name), value.get());
 		return () -> registered;
+	}
+
+	@Override
+	public void registerBuiltinPack(String modId, String packId, String name, boolean enabled) {
+		FabricLoader.getInstance().getModContainer(modId)
+				.map(container -> ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(modId, packId), container, Component.literal(name),
+						enabled ? ResourcePackActivationType.DEFAULT_ENABLED : ResourcePackActivationType.NORMAL))
+				.filter(success -> !success).ifPresent(success -> Scabbard.LOGGER.warn("Could not register built-in resource pack {} for {}.", packId, modId));
 	}
 }
