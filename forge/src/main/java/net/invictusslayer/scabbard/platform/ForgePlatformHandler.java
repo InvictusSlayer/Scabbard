@@ -68,7 +68,7 @@ public class ForgePlatformHandler implements IPlatformHandler {
 
 	@Override
 	public void addCompostableItem(ItemLike item, float chance) {
-		ComposterBlock.COMPOSTABLES.put(item, chance);
+		ComposterBlock.COMPOSTABLES.put(item.asItem(), chance);
 	}
 
 	@Override
