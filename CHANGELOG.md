@@ -1,1 +1,1 @@
-- fixed neoforge biome modifiers
+- added custom built-in resource pack handling
