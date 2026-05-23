@@ -1,3 +1,1 @@
-- added compostable item handling
-- added furnace fuel item handling
-- tweaked forge custom pack priority
+- fix to compostable blocks
