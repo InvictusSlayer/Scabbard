@@ -1,1 +1,3 @@
 - added custom built-in resource pack handling
+- added compostable item handling
+- added furnace fuel item handling

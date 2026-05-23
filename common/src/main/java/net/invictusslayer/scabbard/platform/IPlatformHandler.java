@@ -6,6 +6,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
@@ -34,6 +39,10 @@ public interface IPlatformHandler {
 	void addStrippableBlock(Block block, Block stripped);
 
 	void addFlattenableBlock(Block block, BlockState flattened);
+
+	void addCompostableItem(ItemLike item, float chance);
+
+	void addFurnaceFuelItem(ItemLike item, int ticks);
 
 	void addSpawnBiomeModifier(BiomeModifierHandler handler, String name, TagKey<Biome> biomes, List<MobSpawnSettings.SpawnerData> spawners);
 

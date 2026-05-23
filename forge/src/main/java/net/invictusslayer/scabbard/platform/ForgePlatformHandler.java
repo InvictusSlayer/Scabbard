@@ -14,14 +14,19 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
@@ -58,6 +63,18 @@ public class ForgePlatformHandler implements IPlatformHandler {
 	public void addFlattenableBlock(Block block, BlockState flattened) {
 		ShovelItem.FLATTENABLES = Maps.newHashMap(ShovelItem.FLATTENABLES);
 		ShovelItem.FLATTENABLES.put(block, flattened);
+	}
+
+	@Override
+	public void addCompostableItem(ItemLike item, float chance) {
+		ComposterBlock.COMPOSTABLES.put(item, chance);
+	}
+
+	@Override
+	public void addFurnaceFuelItem(ItemLike item, int ticks) {
+		MinecraftForge.EVENT_BUS.addListener((FurnaceFuelBurnTimeEvent event) -> {
+			if (event.getItemStack().is(item.asItem())) event.setBurnTime(ticks);
+		});
 	}
 
 	@Override
