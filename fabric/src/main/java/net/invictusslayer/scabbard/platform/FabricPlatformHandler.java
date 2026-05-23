@@ -3,6 +3,7 @@ package net.invictusslayer.scabbard.platform;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -20,9 +21,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -55,6 +58,16 @@ public class FabricPlatformHandler implements IPlatformHandler {
 	@Override
 	public void addFlattenableBlock(Block block, BlockState flattened) {
 		FlattenableBlockRegistry.register(block, flattened);
+	}
+
+	@Override
+	public void addCompostableItem(ItemLike item, float chance) {
+		ComposterBlock.COMPOSTABLES.put(item, chance);
+	}
+
+	@Override
+	public void addFurnaceFuelItem(ItemLike item, int ticks) {
+		FuelRegistry.INSTANCE.add(item, ticks);
 	}
 
 	@Override

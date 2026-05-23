@@ -25,7 +25,7 @@ public class ScabbardForge {
 				BuiltInPackHandler.PACKS.forEach(data -> {
 					Path path = ModList.get().getModFileById(data.modId()).getFile().findResource("resourcepacks/" + data.packId());
 					Pack pack = Pack.readMetaAndCreate(data.packId(), Component.literal(data.name()), false,
-							s -> new PathPackResources(s, path, data.enabled()), event.getPackType(), Pack.Position.BOTTOM, data.enabled() ? PackSource.BUILT_IN : PackSource.FEATURE);
+							s -> new PathPackResources(s, path, data.enabled()), event.getPackType(), Pack.Position.TOP, data.enabled() ? PackSource.BUILT_IN : PackSource.FEATURE);
 					event.addRepositorySource(consumer -> consumer.accept(pack));
 				});
 			}
