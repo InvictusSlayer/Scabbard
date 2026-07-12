@@ -1,1 +1,1 @@
-- made registerDispensability public
+- made registerDispensability not static
