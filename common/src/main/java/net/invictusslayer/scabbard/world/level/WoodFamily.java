@@ -1,18 +1,18 @@
 package net.invictusslayer.scabbard.world.level;
 
+import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.platform.IPlatformHandler;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.ChestBoat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -44,8 +44,36 @@ public class WoodFamily {
 		return variants;
 	}
 
+	@Deprecated
 	public Supplier<?> get(Variant variant) {
 		return variants.get(variant);
+	}
+
+	public Optional<Item> getItem(Variant variant) {
+		Supplier<?> supplier = variants.get(variant);
+		if (supplier == null || !(supplier.get() instanceof Item item)) {
+			Scabbard.LOGGER.warn("WoodFamily.Variant {} does not contain an Item", variant.name());
+			return Optional.empty();
+		}
+		return Optional.of(item);
+	}
+
+	public Optional<Block> getBlock(Variant variant) {
+		Supplier<?> supplier = variants.get(variant);
+		if (supplier == null || !(supplier.get() instanceof Block block)) {
+			Scabbard.LOGGER.warn("WoodFamily.Variant {} does not contain an Block", variant.name());
+			return Optional.empty();
+		}
+		return Optional.of(block);
+	}
+
+	public Optional<EntityType<Boat>> getBoat(Variant variant) {
+		Supplier<?> supplier = variants.get(variant);
+		if (supplier == null || !(supplier.get() instanceof EntityType<?> boat)) {
+			Scabbard.LOGGER.warn("WoodFamily.Variant {} does not contain an Entity", variant.name());
+			return Optional.empty();
+		}
+		return Optional.of((EntityType<Boat>) boat);
 	}
 
 	public boolean isFlammable() {
@@ -69,8 +97,15 @@ public class WoodFamily {
 
 	public void registerStrippability(IPlatformHandler platform) {
 		if (!isStrippable) return;
-		platform.addStrippableBlock((Block) get(Variant.LOG).get(), (Block) get(Variant.STRIPPED_LOG).get());
-		platform.addStrippableBlock((Block) get(Variant.WOOD).get(), (Block) get(Variant.STRIPPED_WOOD).get());
+		getBlock(Variant.LOG).ifPresent(b -> getBlock(Variant.STRIPPED_LOG).ifPresent(b1 -> platform.addStrippableBlock(b, b1)));
+		getBlock(Variant.WOOD).ifPresent(b -> getBlock(Variant.STRIPPED_WOOD).ifPresent(b1 -> platform.addStrippableBlock(b, b1)));
+	}
+
+	protected static void registerDispensability(Stream<WoodFamily> families) {
+		families.forEach(family -> {
+			family.getBoat(WoodFamily.Variant.BOAT).ifPresent(boat -> family.getItem(WoodFamily.Variant.BOAT_ITEM).ifPresent(item -> DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(boat))));
+			family.getBoat(WoodFamily.Variant.CHEST_BOAT).ifPresent(boat -> family.getItem(WoodFamily.Variant.CHEST_BOAT_ITEM).ifPresent(item -> DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(boat))));
+		});
 	}
 
 	protected static Builder builder() {
