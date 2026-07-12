@@ -92,7 +92,7 @@ public class WoodFamily {
 		getBlock(Variant.WOOD).ifPresent(b -> getBlock(Variant.STRIPPED_WOOD).ifPresent(b1 -> platform.addStrippableBlock(b, b1)));
 	}
 
-	protected static void registerDispensability(Stream<WoodFamily> families) {
+	public static void registerDispensability(Stream<WoodFamily> families) {
 		families.filter(WoodFamily::hasBoatType).forEach(family -> {
 			Boat.Type type = family.getBoatType();
 			family.getItem(WoodFamily.Variant.BOAT).ifPresent(boat -> DispenserBlock.registerBehavior(boat, new BoatDispenseItemBehavior(type)));
