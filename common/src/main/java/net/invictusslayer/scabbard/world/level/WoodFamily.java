@@ -101,11 +101,9 @@ public class WoodFamily {
 		getBlock(Variant.WOOD).ifPresent(b -> getBlock(Variant.STRIPPED_WOOD).ifPresent(b1 -> platform.addStrippableBlock(b, b1)));
 	}
 
-	public static void registerDispensability(Stream<WoodFamily> families) {
-		families.forEach(family -> {
-			family.getBoat(WoodFamily.Variant.BOAT).ifPresent(boat -> family.getItem(WoodFamily.Variant.BOAT_ITEM).ifPresent(item -> DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(boat))));
-			family.getBoat(WoodFamily.Variant.CHEST_BOAT).ifPresent(boat -> family.getItem(WoodFamily.Variant.CHEST_BOAT_ITEM).ifPresent(item -> DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(boat))));
-		});
+	public void registerDispensability() {
+        getBoat(WoodFamily.Variant.BOAT).ifPresent(boat -> getItem(WoodFamily.Variant.BOAT_ITEM).ifPresent(item -> DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(boat))));
+        getBoat(WoodFamily.Variant.CHEST_BOAT).ifPresent(boat -> getItem(WoodFamily.Variant.CHEST_BOAT_ITEM).ifPresent(item -> DispenserBlock.registerBehavior(item, new BoatDispenseItemBehavior(boat))));
 	}
 
 	protected static Builder builder() {
