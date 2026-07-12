@@ -1,1 +1,4 @@
-- fix to compostable blocks
+- added safer WoodFamily get Variant
+- unsafe get is now deprecated
+- fixed registerStrippability crash
+- merged DispensableItems into WoodFamily

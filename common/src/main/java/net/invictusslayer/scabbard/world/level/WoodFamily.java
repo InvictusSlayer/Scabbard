@@ -1,15 +1,15 @@
 package net.invictusslayer.scabbard.world.level;
 
+import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.platform.IPlatformHandler;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -36,12 +36,35 @@ public class WoodFamily {
 		return boatType;
 	}
 
+	public boolean hasBoatType() {
+		return boatType != null;
+	}
+
 	public Map<Variant, Supplier<?>> getVariants() {
 		return variants;
 	}
 
+	@Deprecated
 	public Supplier<?> get(Variant variant) {
 		return variants.get(variant);
+	}
+
+	public Optional<Item> getItem(Variant variant) {
+		Supplier<?> supplier = variants.get(variant);
+		if (supplier == null || !(supplier.get() instanceof Item item)) {
+			Scabbard.LOGGER.warn("WoodFamily.Variant {} does not contain an Item", variant.name());
+			return Optional.empty();
+		}
+		return Optional.of(item);
+	}
+
+	public Optional<Block> getBlock(Variant variant) {
+		Supplier<?> supplier = variants.get(variant);
+		if (supplier == null || !(supplier.get() instanceof Block block)) {
+			Scabbard.LOGGER.warn("WoodFamily.Variant {} does not contain an Block", variant.name());
+			return Optional.empty();
+		}
+		return Optional.of(block);
 	}
 
 	public boolean isFlammable() {
@@ -65,8 +88,16 @@ public class WoodFamily {
 
 	public void registerStrippability(IPlatformHandler platform) {
 		if (!isStrippable) return;
-		platform.addStrippableBlock((Block) get(Variant.LOG).get(), (Block) get(Variant.STRIPPED_LOG).get());
-		platform.addStrippableBlock((Block) get(Variant.WOOD).get(), (Block) get(Variant.STRIPPED_WOOD).get());
+		getBlock(Variant.LOG).ifPresent(b -> getBlock(Variant.STRIPPED_LOG).ifPresent(b1 -> platform.addStrippableBlock(b, b1)));
+		getBlock(Variant.WOOD).ifPresent(b -> getBlock(Variant.STRIPPED_WOOD).ifPresent(b1 -> platform.addStrippableBlock(b, b1)));
+	}
+
+	protected static void registerDispensability(Stream<WoodFamily> families) {
+		families.filter(WoodFamily::hasBoatType).forEach(family -> {
+			Boat.Type type = family.getBoatType();
+			family.getItem(WoodFamily.Variant.BOAT).ifPresent(boat -> DispenserBlock.registerBehavior(boat, new BoatDispenseItemBehavior(type)));
+			family.getItem(WoodFamily.Variant.CHEST_BOAT).ifPresent(boat -> DispenserBlock.registerBehavior(boat, new BoatDispenseItemBehavior(type, true)));
+		});
 	}
 
 	protected static Builder builder() {
