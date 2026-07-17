@@ -1,1 +1,2 @@
-- made registerDispensability not static
+- added recipe provider
+- added block loot provider
