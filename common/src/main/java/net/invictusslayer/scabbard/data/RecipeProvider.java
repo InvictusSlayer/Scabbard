@@ -66,27 +66,27 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
 		builder.unlockedBy("has_planks", has(planks)).group("wooden_" + group).save(output);
 	}
 
-    private static RecipeBuilder buttonBuilder(ItemLike button, Ingredient material) {
+    public static RecipeBuilder buttonBuilder(ItemLike button, Ingredient material) {
         return ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, button).requires(material);
     }
 
-    private static RecipeBuilder fenceBuilder(ItemLike fence, Ingredient material) {
+    public static RecipeBuilder fenceBuilder(ItemLike fence, Ingredient material) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, fence, 3).define('W', material).define('#', Items.STICK).pattern("W#W").pattern("W#W");
     }
 
-    private static RecipeBuilder fenceGateBuilder(ItemLike fenceGate, Ingredient material) {
+    public static RecipeBuilder fenceGateBuilder(ItemLike fenceGate, Ingredient material) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, fenceGate).define('#', Items.STICK).define('W', material).pattern("#W#").pattern("#W#");
     }
 
-    private static RecipeBuilder pressurePlateBuilder(RecipeCategory category, ItemLike pressurePlate, Ingredient material) {
+    public static RecipeBuilder pressurePlateBuilder(RecipeCategory category, ItemLike pressurePlate, Ingredient material) {
         return ShapedRecipeBuilder.shaped(category, pressurePlate).define('#', material).pattern("##");
     }
 
-    private static RecipeBuilder signBuilder(ItemLike sign, Ingredient material) {
+    public static RecipeBuilder signBuilder(ItemLike sign, Ingredient material) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, sign, 3).group("sign").define('#', material).define('X', Items.STICK).pattern("###").pattern("###").pattern(" X ");
     }
 
-    private static RecipeBuilder trapdoorBuilder(ItemLike trapdoor, Ingredient material) {
+    public static RecipeBuilder trapdoorBuilder(ItemLike trapdoor, Ingredient material) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, trapdoor, 2).define('#', material).pattern("###").pattern("###");
     }
 
