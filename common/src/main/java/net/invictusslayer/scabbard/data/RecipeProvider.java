@@ -1,11 +1,12 @@
 package net.invictusslayer.scabbard.data;
 
 import net.invictusslayer.scabbard.world.level.WoodFamily;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -16,21 +17,21 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
     protected final String modId;
 
-    public RecipeProvider(PackOutput output, String modId) {
-        super(output);
+    public RecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String modId) {
+        super(output, registries);
         this.modId = modId;
     }
 
-	protected void generateBlockFamily(Consumer<FinishedRecipe> output, BlockFamily family) {
-        if (family.shouldGenerateRecipe(FeatureFlagSet.of(FeatureFlags.VANILLA))) generateRecipes(output, family);
+	protected void generateBlockFamily(RecipeOutput output, BlockFamily family) {
+        if (family.shouldGenerateRecipe()) generateRecipes(output, family, FeatureFlagSet.of(FeatureFlags.VANILLA));
 	}
 
-	protected void generateWoodFamily(Consumer<FinishedRecipe> output, WoodFamily family) {
+	protected void generateWoodFamily(RecipeOutput output, WoodFamily family) {
         family.getBlock(WoodFamily.Variant.PLANKS).ifPresent(planks -> {
             planksFromLog(output, planks, family.getLogItems(), 4);
             Ingredient ingredient = Ingredient.of(planks);
@@ -62,7 +63,7 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
         family.getItem(WoodFamily.Variant.BOAT).ifPresent(boat -> family.getItem(WoodFamily.Variant.CHEST_BOAT).ifPresent(chest -> chestBoat(output, chest, boat)));
 	}
 
-	private static void woodenRecipe(Consumer<FinishedRecipe> output, RecipeBuilder builder, Block planks, String group) {
+	private static void woodenRecipe(RecipeOutput output, RecipeBuilder builder, Block planks, String group) {
 		builder.unlockedBy("has_planks", has(planks)).group("wooden_" + group).save(output);
 	}
 
@@ -90,16 +91,16 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
         return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, trapdoor, 2).define('#', material).pattern("###").pattern("###");
     }
 
-	protected void fourItemPacker(Consumer<FinishedRecipe> output, RecipeCategory category, ItemLike packed, ItemLike unpacked) {
-		ShapedRecipeBuilder.shaped(category, packed, 1).define('#', unpacked).pattern("##").pattern("##").unlockedBy(getHasName(unpacked), has(unpacked)).save(output, new ResourceLocation(modId, getSimpleRecipeName(unpacked)));
+	protected void fourItemPacker(RecipeOutput output, RecipeCategory category, ItemLike packed, ItemLike unpacked) {
+		ShapedRecipeBuilder.shaped(category, packed, 1).define('#', unpacked).pattern("##").pattern("##").unlockedBy(getHasName(unpacked), has(unpacked)).save(output, ResourceLocation.fromNamespaceAndPath(modId, getSimpleRecipeName(unpacked)));
 	}
 
-	protected void nineItemStorageRecipes(Consumer<FinishedRecipe> output, RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed) {
+	protected void nineItemStorageRecipes(RecipeOutput output, RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed) {
 		nineItemStorageRecipes(output, unpackedCategory, unpacked, packedCategory, packed, getSimpleRecipeName(packed), getSimpleRecipeName(unpacked));
 	}
 
-	protected void nineItemStorageRecipes(Consumer<FinishedRecipe> output, RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed, String packedName, String unpackedName) {
-		ShapelessRecipeBuilder.shapeless(unpackedCategory, unpacked, 9).requires(packed).group(null).unlockedBy(getHasName(packed), has(packed)).save(output, new ResourceLocation(modId, unpackedName));
-		ShapedRecipeBuilder.shaped(packedCategory, packed).define('#', unpacked).pattern("###").pattern("###").pattern("###").group(null).unlockedBy(getHasName(unpacked), has(unpacked)).save(output, new ResourceLocation(modId, packedName));
+	protected void nineItemStorageRecipes(RecipeOutput output, RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed, String packedName, String unpackedName) {
+		ShapelessRecipeBuilder.shapeless(unpackedCategory, unpacked, 9).requires(packed).group(null).unlockedBy(getHasName(packed), has(packed)).save(output, ResourceLocation.fromNamespaceAndPath(modId, unpackedName));
+		ShapedRecipeBuilder.shaped(packedCategory, packed).define('#', unpacked).pattern("###").pattern("###").pattern("###").group(null).unlockedBy(getHasName(unpacked), has(unpacked)).save(output, ResourceLocation.fromNamespaceAndPath(modId, packedName));
 	}
 }

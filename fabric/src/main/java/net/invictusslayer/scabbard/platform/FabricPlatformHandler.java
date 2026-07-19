@@ -95,7 +95,7 @@ public class FabricPlatformHandler implements IPlatformHandler {
 	@Override
 	public void registerBuiltinPack(String modId, String packId, String name, boolean enabled) {
 		FabricLoader.getInstance().getModContainer(modId)
-				.map(container -> ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(modId, packId), container, Component.literal(name),
+				.map(container -> ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.fromNamespaceAndPath(modId, packId), container, Component.literal(name),
 						enabled ? ResourcePackActivationType.DEFAULT_ENABLED : ResourcePackActivationType.NORMAL))
 				.filter(success -> !success).ifPresent(success -> Scabbard.LOGGER.warn("Could not register built-in resource pack {} for {}.", packId, modId));
 	}
