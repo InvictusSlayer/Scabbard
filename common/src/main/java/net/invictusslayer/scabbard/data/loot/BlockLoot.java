@@ -2,10 +2,11 @@ package net.invictusslayer.scabbard.data.loot;
 
 import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.world.level.WoodFamily;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -19,29 +20,29 @@ import java.util.function.BiConsumer;
 public abstract class BlockLoot extends BlockLootSubProvider {
     private final String modId;
 
-    public BlockLoot(Set<Item> explosionResistant, FeatureFlagSet enabledFeatures, String modId) {
-        super(explosionResistant, enabledFeatures);
+    public BlockLoot(Set<Item> explosionResistant, FeatureFlagSet enabledFeatures, HolderLookup.Provider registries, String modId) {
+        super(explosionResistant, enabledFeatures, registries);
         this.modId = modId;
     }
 
-    public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
+    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
         generate();
-        Set<ResourceLocation> set = new HashSet<>();
+        Set<ResourceKey<LootTable>> set = new HashSet<>();
 
         for (Block block : BuiltInRegistries.BLOCK) {
             if (block.isEnabled(enabledFeatures)) {
-                ResourceLocation loc = block.getLootTable();
-                if (loc != BuiltInLootTables.EMPTY && set.add(loc)) {
-                    LootTable.Builder builder = map.remove(loc);
+                ResourceKey<LootTable> key = block.getLootTable();
+                if (key != BuiltInLootTables.EMPTY && set.add(key)) {
+                    LootTable.Builder builder = map.remove(key);
 
-                    if (!loc.getNamespace().equals(modId)) continue;
+                    if (!key.location().getNamespace().equals(modId)) continue;
 
                     if (builder == null) {
-                        Scabbard.LOGGER.error("Missing loottable '{}' for '{}'", loc, BuiltInRegistries.BLOCK.getKey(block));
+                        Scabbard.LOGGER.error("Missing loottable '{}' for '{}'", key.location(), BuiltInRegistries.BLOCK.getKey(block));
                         continue;
                     }
 
-                    output.accept(loc, builder);
+                    output.accept(key, builder);
                 }
             }
         }

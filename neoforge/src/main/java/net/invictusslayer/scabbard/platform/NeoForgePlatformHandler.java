@@ -2,6 +2,7 @@ package net.invictusslayer.scabbard.platform;
 
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.invictusslayer.scabbard.resource.BuiltInPackHandler;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -14,10 +15,12 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -25,6 +28,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -62,6 +66,14 @@ public class NeoForgePlatformHandler implements IPlatformHandler {
 	}
 
 	@Override
+	public void addCompostableItem(ItemLike item, float chance) {
+	}
+
+	@Override
+	public void addFurnaceFuelItem(ItemLike item, int ticks) {
+	}
+
+	@Override
 	public void addSpawnBiomeModifier(BiomeModifierHandler handler, String name, TagKey<Biome> biomes, List<MobSpawnSettings.SpawnerData> spawners) {
 		handler.spawnModifiers.add(new BiomeModifierHandler.SpawnModifier(name, biomes, spawners));
 	}
@@ -87,6 +99,11 @@ public class NeoForgePlatformHandler implements IPlatformHandler {
 	public <T> Supplier<Holder.Reference<T>> registerHolder(Registry<T> registry, String modId, String name, Supplier<T> value) {
 		DeferredHolder<?, ?> registryObject = REGISTERS.computeIfAbsent(registry.key(), key -> DeferredRegister.create(registry.key().location(), modId)).register(name, value);
 		return () -> (Holder.Reference<T>) registryObject.getDelegate();
+	}
+
+	@Override
+	public void registerBuiltinPack(String modId, String packId, String name, boolean enabled) {
+		BuiltInPackHandler.PACKS.add(new BuiltInPackHandler.PackData(modId, packId, name, enabled));
 	}
 
 	public static void register(final IEventBus bus) {
