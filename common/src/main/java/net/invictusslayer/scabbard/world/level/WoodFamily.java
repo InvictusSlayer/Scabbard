@@ -91,6 +91,7 @@ public class WoodFamily {
 				case LOG, WOOD, STRIPPED_LOG, STRIPPED_WOOD -> platform.addFlammableBlock((Block) supplier.get(), 5, 5);
 				case LEAVES -> platform.addFlammableBlock((Block) supplier.get(), 60, 30);
 				case PLANKS, STAIRS, SLAB, FENCE, FENCE_GATE -> platform.addFlammableBlock((Block) supplier.get(), 20, 5);
+                default -> {}
 			}
 		});
 	}

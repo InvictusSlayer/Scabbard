@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.HashSet;
@@ -31,19 +30,20 @@ public abstract class BlockLoot extends BlockLootSubProvider {
 
         for (Block block : BuiltInRegistries.BLOCK) {
             if (block.isEnabled(enabledFeatures)) {
-                ResourceKey<LootTable> key = block.getLootTable();
-                if (key != BuiltInLootTables.EMPTY && set.add(key)) {
-                    LootTable.Builder builder = map.remove(key);
+                block.getLootTable().ifPresent(key -> {
+                    if (set.add(key)) {
+                        LootTable.Builder builder = map.remove(key);
 
-                    if (!key.location().getNamespace().equals(modId)) continue;
+                        if (!key.location().getNamespace().equals(modId)) return;
 
-                    if (builder == null) {
-                        Scabbard.LOGGER.error("Missing loottable '{}' for '{}'", key.location(), BuiltInRegistries.BLOCK.getKey(block));
-                        continue;
+                        if (builder == null) {
+                            Scabbard.LOGGER.error("Missing loottable '{}' for '{}'", key.location(), BuiltInRegistries.BLOCK.getKey(block));
+                            return;
+                        }
+
+                        output.accept(key, builder);
                     }
-
-                    output.accept(key, builder);
-                }
+                });
             }
         }
 

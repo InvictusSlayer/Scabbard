@@ -3,7 +3,7 @@ package net.invictusslayer.scabbard.platform;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -67,7 +67,7 @@ public class FabricPlatformHandler implements IPlatformHandler {
 
 	@Override
 	public void addFurnaceFuelItem(ItemLike item, int ticks) {
-		FuelRegistry.INSTANCE.add(item, ticks);
+        FuelRegistryEvents.BUILD.register((builder, context) -> builder.add(item, ticks));
 	}
 
 	@Override
