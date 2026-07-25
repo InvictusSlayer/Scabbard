@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 
 public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
     protected final String modId;
-	private final HolderGetter<Item> items;
+	protected final HolderGetter<Item> items;
 
     public RecipeProvider(HolderLookup.Provider provider, RecipeOutput output, String modId) {
         super(provider, output);
@@ -31,11 +31,11 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
 		this.items = provider.lookupOrThrow(Registries.ITEM);
     }
 
-	protected void generateBlockFamily(RecipeOutput output, BlockFamily family) {
+	protected void generateBlockFamily(BlockFamily family) {
         if (family.shouldGenerateRecipe()) generateRecipes(family, FeatureFlagSet.of(FeatureFlags.VANILLA));
 	}
 
-	protected void generateWoodFamily(RecipeOutput output, WoodFamily family) {
+	protected void generateWoodFamily(WoodFamily family) {
         family.getBlock(WoodFamily.Variant.PLANKS).ifPresent(planks -> {
             planksFromLog(planks, family.getLogItems(), 4);
             Ingredient ingredient = Ingredient.of(planks);
@@ -44,15 +44,15 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
                 if (!(supplier.get() instanceof ItemLike item)) return;
                 switch (variant) {
                     case BOAT -> woodenBoat(item, planks);
-                    case BUTTON -> woodenRecipe(output, buttonRecipe(item, ingredient), planks, "button");
-                    case DOOR -> woodenRecipe(output, doorBuilder(item, ingredient), planks, "door");
-                    case FENCE -> woodenRecipe(output, fenceRecipe(item, ingredient), planks, "fence");
-                    case FENCE_GATE -> woodenRecipe(output, fenceGateRecipe(item, ingredient), planks, "fence_gate");
-                    case PRESSURE_PLATE -> woodenRecipe(output, pressurePlateRecipe(RecipeCategory.REDSTONE, item, ingredient), planks, "pressure_plate");
-                    case SIGN_ITEM -> woodenRecipe(output, signRecipe(item, ingredient), planks, "sign");
-                    case SLAB -> woodenRecipe(output, slabBuilder(RecipeCategory.BUILDING_BLOCKS, item, ingredient), planks, "slab");
-                    case STAIRS -> woodenRecipe(output, stairBuilder(item, ingredient), planks, "stairs");
-                    case TRAPDOOR -> woodenRecipe(output, trapdoorRecipe(item, ingredient), planks, "trapdoor");
+                    case BUTTON -> woodenRecipe(buttonRecipe(item, ingredient), planks, "button");
+                    case DOOR -> woodenRecipe(doorBuilder(item, ingredient), planks, "door");
+                    case FENCE -> woodenRecipe(fenceRecipe(item, ingredient), planks, "fence");
+                    case FENCE_GATE -> woodenRecipe(fenceGateRecipe(item, ingredient), planks, "fence_gate");
+                    case PRESSURE_PLATE -> woodenRecipe(pressurePlateRecipe(RecipeCategory.REDSTONE, item, ingredient), planks, "pressure_plate");
+                    case SIGN_ITEM -> woodenRecipe(signRecipe(item, ingredient), planks, "sign");
+                    case SLAB -> woodenRecipe(slabBuilder(RecipeCategory.BUILDING_BLOCKS, item, ingredient), planks, "slab");
+                    case STAIRS -> woodenRecipe(stairBuilder(item, ingredient), planks, "stairs");
+                    case TRAPDOOR -> woodenRecipe(trapdoorRecipe(item, ingredient), planks, "trapdoor");
                     default -> {}
                 }
             });
@@ -67,7 +67,7 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
         family.getItem(WoodFamily.Variant.BOAT).ifPresent(boat -> family.getItem(WoodFamily.Variant.CHEST_BOAT).ifPresent(chest -> chestBoat(chest, boat)));
 	}
 
-	private void woodenRecipe(RecipeOutput output, RecipeBuilder builder, Block planks, String group) {
+	private void woodenRecipe(RecipeBuilder builder, Block planks, String group) {
 		builder.unlockedBy("has_planks", has(planks)).group("wooden_" + group).save(output);
 	}
 
@@ -95,15 +95,15 @@ public abstract class RecipeProvider extends net.minecraft.data.recipes.RecipePr
         return ShapedRecipeBuilder.shaped(items, RecipeCategory.REDSTONE, trapdoor, 2).define('#', material).pattern("###").pattern("###");
     }
 
-	protected void fourItemPacker(RecipeOutput output, RecipeCategory category, ItemLike packed, ItemLike unpacked) {
+	protected void fourItemPacker(RecipeCategory category, ItemLike packed, ItemLike unpacked) {
 		ShapedRecipeBuilder.shaped(items, category, packed, 1).define('#', unpacked).pattern("##").pattern("##").unlockedBy(getHasName(unpacked), has(unpacked)).save(output, createRecipeKey(getSimpleRecipeName(unpacked)));
 	}
 
-	protected void nineItemStorageRecipes(RecipeOutput output, RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed) {
-		nineItemStorageRecipes(output, unpackedCategory, unpacked, packedCategory, packed, getSimpleRecipeName(packed), getSimpleRecipeName(unpacked));
+	protected void nineItemStorageRecipes(RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed) {
+		nineItemStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, getSimpleRecipeName(packed), getSimpleRecipeName(unpacked));
 	}
 
-	protected void nineItemStorageRecipes(RecipeOutput output, RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed, String packedName, String unpackedName) {
+	protected void nineItemStorageRecipes(RecipeCategory unpackedCategory, ItemLike unpacked, RecipeCategory packedCategory, ItemLike packed, String packedName, String unpackedName) {
 		ShapelessRecipeBuilder.shapeless(items, unpackedCategory, unpacked, 9).requires(packed).group(null).unlockedBy(getHasName(packed), has(packed)).save(output, createRecipeKey(unpackedName));
 		ShapedRecipeBuilder.shaped(items, packedCategory, packed).define('#', unpacked).pattern("###").pattern("###").pattern("###").group(null).unlockedBy(getHasName(unpacked), has(unpacked)).save(output, createRecipeKey(packedName));
 	}
