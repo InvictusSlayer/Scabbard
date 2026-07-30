@@ -69,7 +69,7 @@ public abstract class BlockLoot extends BlockLootSubProvider {
             if (!(supplier.get() instanceof Block block)) return;
             switch (variant) {
                 case DOOR -> add(block, this::createDoorTable);
-                case LEAVES -> family.getBlock(WoodFamily.Variant.SAPLING).ifPresent(sapling -> add(sapling, createLeavesDrops(block, sapling, 0.05F)));
+                case LEAVES -> family.getBlock(WoodFamily.Variant.SAPLING).ifPresent(sapling -> add(block, createLeavesDrops(block, sapling, 0.05F)));
                 case POTTED_SAPLING -> dropPottedContents(block);
                 case SLAB -> add(block, this::createSlabItemTable);
                 case WALL_HANGING_SIGN -> family.getBlock(WoodFamily.Variant.HANGING_SIGN).ifPresent(sign -> dropOther(block, sign));
