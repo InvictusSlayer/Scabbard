@@ -1,1 +1,1 @@
-Added custom armor model rendering
+Small custom armor rendering change
