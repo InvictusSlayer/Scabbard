@@ -1,2 +1,1 @@
-- added recipe provider
-- added block loot provider
+Added custom armor model rendering

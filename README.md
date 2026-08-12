@@ -10,6 +10,7 @@ Scabbard is a library mod used in cross multiloader development (Fabric, Forge &
     - Compostables
     - Furnace fuels
     - Dispensibles
+- Custom armor model rendering
 - Various data generation providers
 - Built-in resource pack registration
 - Custom block texture size
