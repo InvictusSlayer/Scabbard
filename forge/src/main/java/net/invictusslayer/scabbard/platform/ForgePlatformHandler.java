@@ -96,7 +96,7 @@ public class ForgePlatformHandler implements IPlatformHandler {
 	}
 
 	@Override
-	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, ArmorRenderer renderer) {
+	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, CustomArmorRenderer renderer) {
 		return register(BuiltInRegistries.ITEM, modId, name, () -> new ArmorItem(material, type, props) {
 			@Override
 			public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {

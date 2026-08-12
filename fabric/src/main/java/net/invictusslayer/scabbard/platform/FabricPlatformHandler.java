@@ -1,6 +1,7 @@
 package net.invictusslayer.scabbard.platform;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -91,10 +92,10 @@ public class FabricPlatformHandler implements IPlatformHandler {
 		return register(BuiltInRegistries.ITEM, modId, name, () -> new SpawnEggItem(entity.get(), bgColor, fgColor, props));
 	}
 
-	private static final Map<ArmorItem, ArmorRenderer> ARMOR_RENDERERS = new HashMap<>();
+	private static final Map<ArmorItem, CustomArmorRenderer> ARMOR_RENDERERS = new HashMap<>();
 
 	@Override
-	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, ArmorRenderer renderer) {
+	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, CustomArmorRenderer renderer) {
 		Supplier<ArmorItem> registered = register(BuiltInRegistries.ITEM, modId, name, () -> new ArmorItem(material, type, props));
 		ARMOR_RENDERERS.put(registered.get(), renderer);
 		return registered;
@@ -126,7 +127,7 @@ public class FabricPlatformHandler implements IPlatformHandler {
 			original.copyPropertiesTo(model);
 			ResourceLocation loc = BuiltInRegistries.ITEM.getKey(stack.getItem());
 			ResourceLocation texture = new ResourceLocation(loc.getNamespace(), "textures/models/armor/" + loc.getPath() + ".png");
-			net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer.renderPart(poseStack, buffer, light, stack, model, texture);
+			ArmorRenderer.renderPart(poseStack, buffer, light, stack, model, texture);
 			}, armorItem)
 		);
 	}

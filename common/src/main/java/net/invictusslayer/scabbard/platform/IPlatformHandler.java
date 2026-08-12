@@ -52,10 +52,10 @@ public interface IPlatformHandler {
 
 	Supplier<SpawnEggItem> registerSpawnEgg(String modId, String name, Supplier<EntityType<? extends Mob>> entity, int bgColor, int fgColor, Item.Properties props);
 
-	Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, ArmorRenderer renderFactory);
+	Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, CustomArmorRenderer renderer);
 
 	@FunctionalInterface
-	interface ArmorRenderer {
+	interface CustomArmorRenderer {
 		HumanoidModel<LivingEntity> resolve(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot slot, HumanoidModel<?> original);
 	}
 
