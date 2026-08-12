@@ -64,7 +64,6 @@ public interface IPlatformHandler {
 
 	enum Platform {
 		FABRIC,
-		FORGE,
-		NEOFORGE
+		FORGE
 	}
 }
