@@ -4,17 +4,15 @@ import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.invictusslayer.scabbard.resource.BuiltInPackHandler;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -25,6 +23,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
@@ -36,6 +35,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ForgePlatformHandler implements IPlatformHandler {
@@ -93,6 +93,26 @@ public class ForgePlatformHandler implements IPlatformHandler {
 	@Override
 	public Supplier<SpawnEggItem> registerSpawnEgg(String modId, String name, Supplier<EntityType<? extends Mob>> entity, int bgColor, int fgColor, Item.Properties props) {
 		return register(BuiltInRegistries.ITEM, modId, name, () -> new ForgeSpawnEggItem(entity, bgColor, fgColor, props));
+	}
+
+	@Override
+	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, ArmorRenderer renderer) {
+		return register(BuiltInRegistries.ITEM, modId, name, () -> new ArmorItem(material, type, props) {
+			@Override
+			public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
+				return ResourceLocation.fromNamespaceAndPath(modId, "textures/models/armor/" + name + ".png").toString();
+			}
+
+			@Override
+			public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+				consumer.accept(new IClientItemExtensions() {
+					@Override
+					public HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot slot, HumanoidModel<?> original) {
+						return renderer.resolve(livingEntity, itemStack, slot, original);
+					}
+				});
+			}
+		});
 	}
 
 	@Override

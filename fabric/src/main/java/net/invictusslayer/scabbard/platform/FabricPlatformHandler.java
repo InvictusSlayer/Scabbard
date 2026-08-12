@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.invictusslayer.scabbard.Scabbard;
 import net.invictusslayer.scabbard.world.biome.BiomeModifierHandler;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,7 +19,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.ItemLike;
@@ -31,7 +35,9 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class FabricPlatformHandler implements IPlatformHandler {
@@ -85,6 +91,15 @@ public class FabricPlatformHandler implements IPlatformHandler {
 		return register(BuiltInRegistries.ITEM, modId, name, () -> new SpawnEggItem(entity.get(), bgColor, fgColor, props));
 	}
 
+	private static final Map<ArmorItem, ArmorRenderer> ARMOR_RENDERERS = new HashMap<>();
+
+	@Override
+	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, ArmorRenderer renderer) {
+		Supplier<ArmorItem> registered = register(BuiltInRegistries.ITEM, modId, name, () -> new ArmorItem(material, type, props));
+		ARMOR_RENDERERS.put(registered.get(), renderer);
+		return registered;
+	}
+
 	@Override
 	public <T> Supplier<T> register(Registry<? super T> registry, String modId, String name, Supplier<T> value) {
 		T registered = Registry.register(registry, new ResourceLocation(modId, name), value.get());
@@ -103,5 +118,16 @@ public class FabricPlatformHandler implements IPlatformHandler {
 				.map(container -> ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(modId, packId), container, Component.literal(name),
 						enabled ? ResourcePackActivationType.DEFAULT_ENABLED : ResourcePackActivationType.NORMAL))
 				.filter(success -> !success).ifPresent(success -> Scabbard.LOGGER.warn("Could not register built-in resource pack {} for {}.", packId, modId));
+	}
+
+	public static void registerClient() {
+		ARMOR_RENDERERS.forEach((armorItem, renderer) -> net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer.register((poseStack, buffer, stack, entity, slot, light, original) -> {
+			HumanoidModel<LivingEntity> model = renderer.resolve(entity, stack, slot, original);
+			original.copyPropertiesTo(model);
+			ResourceLocation loc = BuiltInRegistries.ITEM.getKey(stack.getItem());
+			ResourceLocation texture = new ResourceLocation(loc.getNamespace(), "textures/models/armor/" + loc.getPath() + ".png");
+			net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer.renderPart(poseStack, buffer, light, stack, model, texture);
+			}, armorItem)
+		);
 	}
 }
