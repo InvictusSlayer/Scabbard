@@ -1,1 +1,1 @@
-Small custom armor rendering change
+Critical mod compatibility fix
