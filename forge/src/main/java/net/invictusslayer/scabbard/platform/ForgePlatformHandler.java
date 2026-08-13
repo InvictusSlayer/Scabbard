@@ -88,7 +88,7 @@ public class ForgePlatformHandler implements IPlatformHandler {
 		handler.featureModifiers.add(new BiomeModifierHandler.FeatureModifier(name, biomes, step, features));
 	}
 
-	private static final Map<ResourceKey<?>, DeferredRegister> REGISTERS = new Reference2ObjectOpenHashMap<>();
+	private final Map<ResourceKey<?>, DeferredRegister> REGISTERS = new Reference2ObjectOpenHashMap<>();
 
 	@Override
 	public Supplier<SpawnEggItem> registerSpawnEgg(String modId, String name, Supplier<EntityType<? extends Mob>> entity, int bgColor, int fgColor, Item.Properties props) {
@@ -131,7 +131,7 @@ public class ForgePlatformHandler implements IPlatformHandler {
 		BuiltInPackHandler.PACKS.add(new BuiltInPackHandler.PackData(modId, packId, name, enabled));
 	}
 
-	public static void register(final IEventBus bus) {
+	public void register(final IEventBus bus) {
 		REGISTERS.values().forEach(deferredRegister -> deferredRegister.register(bus));
 	}
 }

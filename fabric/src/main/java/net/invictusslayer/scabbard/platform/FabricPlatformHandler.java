@@ -92,7 +92,7 @@ public class FabricPlatformHandler implements IPlatformHandler {
 		return register(BuiltInRegistries.ITEM, modId, name, () -> new SpawnEggItem(entity.get(), bgColor, fgColor, props));
 	}
 
-	private static final Map<ArmorItem, CustomArmorRenderer> ARMOR_RENDERERS = new HashMap<>();
+	private final Map<ArmorItem, CustomArmorRenderer> ARMOR_RENDERERS = new HashMap<>();
 
 	@Override
 	public Supplier<ArmorItem> registerCustomArmorItem(String modId, String name, ArmorMaterial material, ArmorItem.Type type, Item.Properties props, CustomArmorRenderer renderer) {
@@ -121,7 +121,7 @@ public class FabricPlatformHandler implements IPlatformHandler {
 				.filter(success -> !success).ifPresent(success -> Scabbard.LOGGER.warn("Could not register built-in resource pack {} for {}.", packId, modId));
 	}
 
-	public static void registerClient() {
+	public void registerClient() {
 		ARMOR_RENDERERS.forEach((armorItem, renderer) -> net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer.register((poseStack, buffer, stack, entity, slot, light, original) -> {
 			HumanoidModel<LivingEntity> model = renderer.resolve(entity, stack, slot, original);
 			original.copyPropertiesTo(model);
