@@ -1,1 +1,1 @@
-Added emissive block texture rendering (pre-1.21.4)
+Fabric crash fix
