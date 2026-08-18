@@ -1,1 +1,1 @@
-Critical mod compatibility fix
+Added emissive block texture rendering (pre-1.21.4)
