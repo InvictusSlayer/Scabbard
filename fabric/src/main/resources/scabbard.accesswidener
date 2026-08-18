@@ -5,5 +5,4 @@ accessible  field   net/minecraft/world/item/ShovelItem FLATTENABLES Ljava/util/
 mutable     field   net/minecraft/world/item/ShovelItem FLATTENABLES Ljava/util/Map;
 accessible  method  net/minecraft/world/level/block/FireBlock setFlammable (Lnet/minecraft/world/level/block/Block;II)V
 
-accessible  field   com/mojang/blaze3d/vertex/VertexFormat offsets Lit/unimi/dsi/fastutil/ints/IntList;
 accessible  class   net/minecraft/client/renderer/block/model/BlockElement$Deserializer

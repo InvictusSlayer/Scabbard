@@ -9,7 +9,8 @@
 	"client": [
 		"client.BlockElementDeserializerMixin",
 		"client.BlockElementFaceMixin",
-		"client.FaceBakeryMixin"
+		"client.FaceBakeryMixin",
+		"client.VertexFormatAccessor"
 	],
 	"server": [
 	],
