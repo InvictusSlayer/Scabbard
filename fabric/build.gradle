@@ -4,16 +4,6 @@ plugins {
     id "com.hypherionmc.modutils.modpublisher" version "2.+"
 }
 
-dependencies {
-    minecraft "com.mojang:minecraft:${mc_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parch_mc_version}:${parch_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-}
-
 loom {
     def aw = project(":fabric").file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) accessWidenerPath.set(aw)
@@ -23,17 +13,25 @@ loom {
     runs {
         client {
             client()
-            setConfigName("Fabric Client")
-            ideConfigGenerated(true)
             runDir("run")
         }
         server {
             server()
-            setConfigName("Fabric Server")
-            ideConfigGenerated(true)
             runDir("run-server")
         }
     }
+}
+
+sourceSets.main.resources.srcDir project(":common").file("src/main/generated").absolutePath
+
+dependencies {
+    minecraft("com.mojang:minecraft:${mc_version}")
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parch_mc_version}:${parch_version}@zip")
+    }
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 }
 
 publisher {
@@ -52,7 +50,10 @@ publisher {
     setLoaders("fabric")
 
     setArtifact(remapJar)
-    addAdditionalFile(sourcesJar)
+    addAdditionalFile {
+        artifact(sourcesJar)
+        fileType("sources-jar")
+    }
     setCurseEnvironment("both")
 
     curseDepends {}
