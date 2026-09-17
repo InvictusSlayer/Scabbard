@@ -39,10 +39,27 @@ repositories {
         )
         filter { includeGroup("org.parchmentmc.data") }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
     maven {
         name = "BlameJared"
         url = "https://maven.blamejared.com"
     }
+    maven {
+        name = "Forge"
+        url = "https://maven.minecraftforge.net"
+    }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 ["apiElements", "runtimeElements", "sourcesElements", "javadocElements"].each { variant ->
