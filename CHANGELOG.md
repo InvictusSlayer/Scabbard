@@ -1,1 +1,1 @@
-Fabric crash fix
+Custom armor renderer rewrite for server compatibility
